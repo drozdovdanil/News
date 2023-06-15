@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Sum
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
+from django.urls import reverse
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT, verbose_name='Имя')
@@ -27,7 +29,7 @@ class Post(models.Model):
             (article, 'Статья')]
 
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    type_1 = models.CharField(max_length=255, choices=type_1)
+    type_1 = models.CharField(max_length=255, choices=type_1, default=news)
     time_post = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=255)
@@ -47,6 +49,10 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.text_news.title()}'
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
+
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

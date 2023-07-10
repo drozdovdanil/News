@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, render
 from .filters import PostFilter
 from .forms import PostForm
 from .models import Post, Category
+from .tasks import send_notification_new_post
 
 
 class ProductsList(ListView):
